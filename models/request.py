@@ -1,6 +1,6 @@
-from enum import Enum
-from pydantic import BaseModel, field_validator, Field
+from  enum import Enum
 
+from pydantic import BaseModel, Field, field_validator
 
 
 class Role(str, Enum):
@@ -19,20 +19,23 @@ class ModelName(str, Enum):
     GPT5 = "gpt-5.4"
 
 
-class Message(BaseModel):
-    role: Role  
-    content: str    
 
+class Message(BaseModel):
+    role: Role
+    content: str
     @field_validator("content")
     @classmethod
     def check_content(cls, content):
         if not content.strip():
-            raise ValueError("content cannot be empty")
+            raise ValueError("Cannot be empty")
         else:
             return content
-        
+
+
+
+
 class UserRequest(BaseModel):
-    messages: list[Message] = Field(min_length=1) 
+    messages: list[Message] = Field(min_length=1)
     model: ModelName
-    max_token: int = Field(ge=5, le=500)
+    max_tokens: int = Field(ge=5, le=500)
     system_prompt: str | None = None
